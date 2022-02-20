@@ -17,7 +17,6 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    // TODO(task): Use ChatRepository to implement the chat.
     return Scaffold(
       appBar: AppBar(
         title : const TextField(
@@ -75,7 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
         },
       ),
 
-      bottomNavigationBar: BottomAppBar(
+      bottomSheet: BottomAppBar(
         child: Row(
           children: [
             const Expanded(
