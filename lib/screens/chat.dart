@@ -78,9 +78,12 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Row(
           children: [
             const Expanded(
-              child:TextField(
-                  decoration: InputDecoration(
-                hintText: 'Сообщение',
+              child:Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                child: TextField(
+                    decoration: InputDecoration(
+                  hintText: 'Сообщение',
+                  ),
                 ),
               ),
             ),
