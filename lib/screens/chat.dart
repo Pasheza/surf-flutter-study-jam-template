@@ -19,6 +19,45 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     // TODO(task): Use ChatRepository to implement the chat.
-    throw UnimplementedError();
+    return Scaffold(
+      appBar: AppBar(
+        title : const TextField(
+          decoration: InputDecoration(
+            hintText: 'Введите ник',
+          ),
+        ),
+        actions: [
+          IconButton(
+              onPressed: () => {},
+              icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
+      body: ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return Card();
+          }
+      ),
+      
+      
+      
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            const Expanded(
+              child:TextField(
+                  decoration: InputDecoration(
+                hintText: 'Сообщение',
+                ),
+              ),
+            ),
+            IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.send)
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
