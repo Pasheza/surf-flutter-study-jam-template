@@ -15,18 +15,33 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+
+  final messageController = TextEditingController();
+  final nicknameController = TextEditingController();
+
+  @override
+  void dispose() {
+    messageController.dispose();
+    nicknameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title : const TextField(
-          decoration: InputDecoration(
+        title : TextField(
+          controller: nicknameController,
+          decoration: const InputDecoration(
             hintText: 'Введите ник',
           ),
         ),
         actions: [
           IconButton(
-              onPressed: () => {},
+              onPressed: () {
+                setState(() {
+                });
+              },
               icon: const Icon(Icons.refresh),
           ),
         ],
@@ -39,7 +54,7 @@ class _ChatScreenState extends State<ChatScreen> {
           if (snapshot.hasData) {
             child = ListView.builder(
                 itemCount: snapshot.data?.length,
-                itemBuilder: (_,index) => MessageCard(message: snapshot.data![index]) // Fix null
+                itemBuilder: (_,index) => MessageCard(message: snapshot.data![index]) // TODO Fix null
             );
           } else if (snapshot.hasError) {
               child = Column(
@@ -77,18 +92,40 @@ class _ChatScreenState extends State<ChatScreen> {
       bottomSheet: BottomAppBar(
         child: Row(
           children: [
-            const Expanded(
+            Expanded(
               child:Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
                 child: TextField(
-                    decoration: InputDecoration(
+                  controller: messageController,
+                    decoration: const InputDecoration(
                   hintText: 'Сообщение',
                   ),
                 ),
               ),
             ),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (nicknameController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Введите свой никнейм'),
+                      )
+                    );
+                  } else if (messageController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Введите сообщение'),
+                        )
+                    );
+                  } else {
+                    widget.chatRepository.sendMessage(
+                        nicknameController.text,
+                        messageController.text
+                    );
+                    setState(() {
+                    });
+                  }
+                },
                 icon: const Icon(Icons.send)
             ),
           ],
