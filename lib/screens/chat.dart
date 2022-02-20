@@ -39,54 +39,55 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                setState(() {
-                });
+                setState(() {});
               },
               icon: const Icon(Icons.refresh),
           ),
         ],
       ),
 
-      body: FutureBuilder<List<ChatMessageDto>>(
-        future: widget.chatRepository.messages,
-        builder: (BuildContext context, AsyncSnapshot<List<ChatMessageDto>> snapshot) {
-          Widget child;
-          if (snapshot.hasData) {
-            child = ListView.builder(
-                itemCount: snapshot.data?.length,
-                itemBuilder: (_,index) => MessageCard(message: snapshot.data![index]) // TODO Fix null
-            );
-          } else if (snapshot.hasError) {
+      body: Center(
+        child: FutureBuilder<List<ChatMessageDto>>(
+          future: widget.chatRepository.messages,
+          builder: (BuildContext context, AsyncSnapshot<List<ChatMessageDto>> snapshot) {
+            Widget child;
+            if (snapshot.hasData) {
+              child = ListView.builder(
+                  itemCount: snapshot.data?.length,
+                  itemBuilder: (_,index) => MessageCard(message: snapshot.data![index]) // TODO Fix null
+              );
+            } else if (snapshot.hasError) {
+                child = Column(
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 60,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Text('Error: ${snapshot.error}'),
+                    )
+                  ],
+                );
+            } else {
               child = Column(
-                children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 60,
+                children: const [
+                  SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Text('Error: ${snapshot.error}'),
+                    padding: EdgeInsets.only(top: 16),
+                    child: Text('Awaiting result...'),
                   )
                 ],
               );
-          } else {
-            child = Column(
-              children: const [
-                SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 16),
-                  child: Text('Awaiting result...'),
-                )
-              ],
-            );
-          }
-          return child;
-        },
+            }
+            return child;
+          },
+        ),
       ),
 
       bottomSheet: BottomAppBar(
@@ -122,8 +123,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         nicknameController.text,
                         messageController.text
                     );
-                    setState(() {
-                    });
+                    setState(() {});
                   }
                 },
                 icon: const Icon(Icons.send)

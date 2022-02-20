@@ -6,17 +6,19 @@ import 'package:surf_practice_chat_flutter/firebase_options.dart';
 import 'package:surf_practice_chat_flutter/screens/chat.dart';
 
 void main() async {
+  runApp(const MyApp());
+}
+
+Future<void> init() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform(
-      androidKey: 'AIzaSyCXU5f25S_SUeVv7cAzoeF373kHk4Hv2dE',
+      androidKey: 'AIzaSyD5bCOfO29kCv2mIdmYa6CEKhud4Gs1YIU',
       iosKey: 'AIzaSyAjvNoe31ZMSakjKFOkhbrZBsj3RyW6plo',
       webKey: 'enter web key here',
     ),
   );
-  
-  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -24,15 +26,50 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chatRepository = ChatRepositoryFirebase(FirebaseFirestore.instance);
+    //final chatRepository = ChatRepositoryFirebase(FirebaseFirestore.instance);
+
 
     return MaterialApp(
       theme: ThemeData(
         colorSchemeSeed: Colors.deepPurple,
         useMaterial3: true,
       ),
-      home: ChatScreen(
-        chatRepository: chatRepository,
+      home: FutureBuilder(
+        future: init(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return ChatScreen(
+              chatRepository: ChatRepositoryFirebase(FirebaseFirestore.instance),
+            );
+          } else {
+            return const SplashScreen();
+          }
+        },
+      ),
+    );
+  }
+}
+
+class SplashScreen extends StatelessWidget {
+
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const <Widget>[
+          Text(
+            "Initialization",
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 20),
+          CircularProgressIndicator()
+        ],
       ),
     );
   }
